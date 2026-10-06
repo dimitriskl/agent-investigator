@@ -4,7 +4,7 @@ public class LogToolTests : IDisposable
 {
     private readonly string logFolder = Path.Combine(
         Path.GetTempPath(), $"LogToolTests-{Guid.NewGuid():N}");
-    byte[] png = Convert.FromBase64String(
+        byte[] png = Convert.FromBase64String(
         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=");
 
     
@@ -21,24 +21,7 @@ public class LogToolTests : IDisposable
     public void Dispose()
     {
         //delete the temp folder
-        try
-        {
-            Directory.Delete(logFolder, true);
-        }
-        catch (IOException exception)
-        {
-            // A file with the same name and location specified by 'path' exists.
-            // -or-
-            // The directory specified by 'path' is read-only, or 'recursive' is 'false' and 'path' is not an empty directory.
-            // -or-
-            // The directory is the application's current working directory.
-            // -or-
-            // The directory contains a read-only file.
-            // -or-
-            // The directory is being used by another process.
-            Console.WriteLine(exception);
-            throw;
-        }
+        Directory.Delete(logFolder, true);
     }
 
     
@@ -49,9 +32,25 @@ public class LogToolTests : IDisposable
         LogTools logTools = new LogTools(logFolder);
         
         //Act
-        string[] files = logTools.ListLogFiles();
+        LogToolsResult result = logTools.ListLogFiles();
         
         //Assert
-        Assert.Equal(new []{"log.log", "log.md", "log.txt"}, files.OrderBy(name => name, StringComparer.Ordinal).ToArray());
+        Assert.True(result.Success);
+        Assert.Equal(new []{"log.log", "log.md", "log.txt"}, result.LogFilePaths.OrderBy(name => name, StringComparer.Ordinal).ToArray());
+    }
+
+    [Fact]
+    public void ListLogFiles_FolderDoesNotExist_ReturnsErrorMessage()
+    {
+        //Arrange
+        string notExistingLogFolder = Path.Combine("./", Guid.NewGuid().ToString());
+        LogTools logTools = new LogTools(notExistingLogFolder);
+        
+        //Act
+        LogToolsResult result = logTools.ListLogFiles();
+        
+        //Assert
+        Assert.False(result.Success);
+        
     }
 }
