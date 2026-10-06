@@ -36,7 +36,7 @@ namespace agent_investigator
             }
             catch (IOException e)
             {
-                message = $"(Error: '{e.Message}')";
+                message = $"(Error: '{e.Message})";
             }   
             
             LogToolsResult result = new LogToolsResult

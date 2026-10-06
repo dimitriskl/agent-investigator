@@ -53,4 +53,19 @@ public class LogToolTests : IDisposable
         Assert.False(result.Success);
         
     }
+    
+    [Fact]
+    public void ListLogFiles_FolderDoesNotExist_ReturnsAMessageWithTheFolder()
+    {
+        //Arrange
+        string notExistingLogFolder = Path.Combine(Directory.GetCurrentDirectory(), Guid.NewGuid().ToString());
+        LogTools logtools = new LogTools(notExistingLogFolder);
+        
+        //Act
+        LogToolsResult  result = logtools.ListLogFiles();
+
+        //Assert
+        Assert.Contains(notExistingLogFolder,result.Message);
+
+    }
 }

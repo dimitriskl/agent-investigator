@@ -31,16 +31,11 @@ internal class Program
         string? requestedModel = args.Length > 1 ? args[1].Trim() : null;
 
         //Create tools
-        LogTools logtools = new LogTools(Path.Combine(Directory.GetCurrentDirectory(), "samples", "logs"));
-        List<AITool> tools =
-        [
-            AIFunctionFactory.Create(logtools.ListLogFiles, "list_log_files",
-                "Lists the log files available for investigation"),
-            AIFunctionFactory.Create(logtools.SearchLogs, "search_logs", "Searches all log files containing a text. Returns 'file:line: content'")
-        ];
+        string logsFolder = Path.Combine(Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..")), "samples", "logs");
+        AgentTools agentTools = new  AgentTools(logsFolder);
         
         //Create the agent
-        AIAgent agent = AiAgent(provider, requestedModel, modelInstructions, tools);
+        AIAgent agent = AiAgent(provider, requestedModel, modelInstructions, agentTools.Tools);
         
         //Create a session for the agent
         AgentSession session = await agent.CreateSessionAsync();
