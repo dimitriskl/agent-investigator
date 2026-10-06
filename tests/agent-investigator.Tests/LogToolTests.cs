@@ -35,7 +35,7 @@ public class LogToolTests : IDisposable
         LogToolsResult result = logTools.ListLogFiles();
         
         //Assert
-        Assert.True(result.Success);
+        Assert.True(result.IsSuccess);
         Assert.Equal(new []{"log.log", "log.md", "log.txt"}, result.LogFilePaths.OrderBy(name => name, StringComparer.Ordinal).ToArray());
     }
 
@@ -50,7 +50,7 @@ public class LogToolTests : IDisposable
         LogToolsResult result = logTools.ListLogFiles();
         
         //Assert
-        Assert.False(result.Success);
+        Assert.False(result.IsSuccess);
         
     }
     
@@ -58,14 +58,14 @@ public class LogToolTests : IDisposable
     public void ListLogFiles_FolderDoesNotExist_ReturnsAMessageWithTheFolder()
     {
         //Arrange
-        string notExistingLogFolder = Path.Combine(Directory.GetCurrentDirectory(), Guid.NewGuid().ToString());
-        LogTools logtools = new LogTools(notExistingLogFolder);
+        string folderDosentExist = Path.Combine(Directory.GetCurrentDirectory(), Guid.NewGuid().ToString());
+        LogTools logTools = new LogTools(folderDosentExist);
         
         //Act
-        LogToolsResult  result = logtools.ListLogFiles();
+        LogToolsResult  result = logTools.ListLogFiles();
 
         //Assert
-        Assert.Contains(notExistingLogFolder,result.Message);
-
+        Assert.Contains(folderDosentExist,result.Message);
+        Assert.Contains("Please fix the log path in the settings and restart", result.Message);
     }
 }

@@ -18,5 +18,5 @@ public class LogToolsResult
     /// <summary>
     /// Success flag of the operations
     /// </summary>
-    public bool Success { get; set; } =  false;
+    public bool IsSuccess { get; set; } =  false;
 }

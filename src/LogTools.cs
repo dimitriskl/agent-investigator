@@ -27,23 +27,31 @@ namespace agent_investigator
             
             try
             {
-                logFilePaths = LogFilePaths()
+                if (Directory.Exists(logFolder))
+                {
+                  logFilePaths = LogFilePaths()
                     .Select(x=> Path.GetRelativePath(logFolder, x))
                     .ToArray();
-                
-                message = $"(ListLogFiles was called for {logFolder} with success.')";
-                isSuccess = true;
+                    message = $"{logFolder} files where listed with success.";
+                    isSuccess = true;
+                }
+                else
+                {
+                    message  = $"{logFolder} does not exist.  Please fix the log path in the settings and restart.";
+                    isSuccess = false;
+                }
             }
             catch (IOException e)
             {
                 message = $"(Error: '{e.Message})";
+                isSuccess = false;
             }   
             
             LogToolsResult result = new LogToolsResult
             {
                 LogFilePaths = logFilePaths,
                 Message = message,
-                Success = isSuccess
+                IsSuccess = isSuccess
             };
 
             return result;
