@@ -1,0 +1,5 @@
+﻿2026-10-05 08:02:40.871 [WARN] PaymentGateway: Slow response 2300ms for order 1002
+2026-10-05 08:02:43.990 [ERROR] PaymentGateway: Timeout after 3000ms for order 1002
+2026-10-05 08:06:12.777 [ERROR] OrderService: NullReferenceException while mapping order 1004
+2026-10-05 08:09:59.999 [ERROR] Database: Deadlock detected on table Orders
+2026-10-05 08:10:00.010 [INFO] OrderService: Order 1007 processed in 402ms
