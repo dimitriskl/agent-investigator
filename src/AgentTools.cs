@@ -4,17 +4,18 @@ namespace agent_investigator;
 
 public class AgentTools
 {
-    public AgentTools(string logFolder)
+    public AgentTools(List<string> logFolders)
     {
-        LogTools logtools = new LogTools(logFolder);
-        
+        LogTools logtools = new(logFolders);
+
         Tools =
         [
             AIFunctionFactory.Create(logtools.ListLogFiles, "list_log_files",
                 "Lists the log files available for investigation"),
-            AIFunctionFactory.Create(logtools.SearchLogs, "search_logs", "Searches all log files containing a text. Returns 'file:line: content'")
+            AIFunctionFactory.Create(logtools.SearchLogs, "search_logs",
+                "Searches all log files containing a text. Returns 'file:line: content'")
         ];
     }
 
-    public List<AITool> Tools { get;  }
+    public List<AITool> Tools { get; }
 }

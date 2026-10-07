@@ -22,7 +22,7 @@ public class AgentToolsTests : IDisposable
     public void AgentTools_LoadsAllTools_AndGetListLogFileTool()
     {
         //Arrange
-        AgentTools agentTools = new(logFolder);
+        AgentTools agentTools = new(new List<string> { logFolder });
 
         //Act
         List<AITool> listOfTools = agentTools.Tools;
@@ -36,7 +36,7 @@ public class AgentToolsTests : IDisposable
     {
         //Arrange
         string notExistingLogFolder = Path.Combine(Directory.GetCurrentDirectory(), Guid.NewGuid().ToString());
-        AgentTools agentTools = new(notExistingLogFolder);
+        AgentTools agentTools = new(new List<string> { notExistingLogFolder });
         AIFunction listLogFilesTool = (AIFunction)agentTools.Tools.Single(x => x.Name == "list_log_files");
 
         //Act

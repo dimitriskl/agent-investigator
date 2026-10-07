@@ -6,9 +6,9 @@
 public class LogToolsResult
 {
     /// <summary>
-    /// The file paths 
+    /// The log files, grouped by the folder they were found in
     /// </summary>
-    public string[] LogFilePaths { get; set; } = Array.Empty<string>();
+    public List<LogFolderFiles> Folders { get; set; } = new();
     
     /// <summary>
     /// Message of the operation of reading the folder paths
