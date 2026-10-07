@@ -4,5 +4,7 @@
     {
         public bool IsSuccess { get; set; }
         public string LogPath { get; set; }
+        public string Message { get; set; }
+        public AppSettings AppSettings { get; set; }
     }
 }

@@ -1,14 +1,63 @@
-﻿namespace agent_investigator;
+﻿using System.Text.Json;
 
+namespace agent_investigator;
+
+/// <summary>
+///     Settings store class for saving and reading the app settings from the filesystem.
+/// </summary>
 public class SettingsStore
 {
+    private readonly string _folderPath;
+
     public SettingsStore(string folderPath)
     {
-        throw new NotImplementedException();
+        _folderPath = folderPath;
     }
 
+    /// <summary>
+    ///     Create if do not exist or load application settings
+    /// </summary>
+    /// <returns></returns>
     public SettingsStoreResult CreateOrLoadSettings()
     {
-        throw new NotImplementedException();
+        var settingsStoreResult = new SettingsStoreResult();
+
+        try
+        {
+            string settingsFullPath = Path.Combine(_folderPath, "settings.json");
+
+            var settings = new AppSettings();
+
+            string contents;
+            if (!File.Exists(settingsFullPath))
+            {
+                Directory.CreateDirectory(_folderPath);
+
+                contents = JsonSerializer.Serialize(settings);
+                File.WriteAllText(settingsFullPath, contents);
+            }
+            else
+            {
+                contents = File.ReadAllText(settingsFullPath);
+                settings = JsonSerializer.Deserialize<AppSettings>(contents);
+            }
+
+            settingsStoreResult.IsSuccess = true;
+            settingsStoreResult.LogPath = settings.LogPath;
+            settingsStoreResult.AppSettings = settings;
+        }
+        catch (DirectoryNotFoundException e)
+        {
+            settingsStoreResult.IsSuccess = false;
+            settingsStoreResult.Message = e.Message;
+        }
+        catch (Exception e)
+        {
+            settingsStoreResult.IsSuccess = false;
+            settingsStoreResult.LogPath = string.Empty;
+            settingsStoreResult.Message = e.Message;
+        }
+
+        return settingsStoreResult;
     }
 }
