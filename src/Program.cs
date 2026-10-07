@@ -13,7 +13,7 @@ internal class Program
     private const string separator = "--------";
 
     static async Task Main(string[] args)
-    {
+    {   
 		string modelInstructions =  "You are a log investigator. " +
                                     "Always use your tools to look at the real log files before answering. " +
                                     "Never say you cannot access logs; call list_log_files instead.";

@@ -23,7 +23,7 @@ namespace agent_investigator
             bool isSuccess = false;
             Console.WriteLine("(ListLogFiles was called)");
 
-            string[] logFilePaths = new string[] { };
+            string[] logFilePaths = [];
             
             try
             {
