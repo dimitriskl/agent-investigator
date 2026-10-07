@@ -1,10 +1,12 @@
-﻿namespace agent_investigator
+﻿namespace agent_investigator;
+
+/// <summary>
+///     Result of the settings store
+/// </summary>
+public class SettingsStoreResult
 {
-    public class SettingsStoreResult
-    {
-        public bool IsSuccess { get; set; }
-        public string LogPath { get; set; }
-        public string Message { get; set; }
-        public AppSettings AppSettings { get; set; }
-    }
+    public bool IsSuccess { get; set; }
+    public List<string> LogPaths { get; set; } = new();
+    public string Message { get; set; } = string.Empty;
+    public AppSettings AppSettings { get; set; } = new();
 }

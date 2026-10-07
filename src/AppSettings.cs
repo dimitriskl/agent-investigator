@@ -2,5 +2,5 @@
 
 public class AppSettings
 {
-    public string LogPath { get; set; } =  string.Empty;
+    public List<string> LogPaths { get; set; } = new();
 }

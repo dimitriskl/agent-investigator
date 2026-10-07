@@ -14,7 +14,7 @@ public class SettingsStoreTests
 
         //Assert
         Assert.True(settingsStoreResult.IsSuccess);
-        Assert.Equal(string.Empty, settingsStoreResult.LogPath);
+        Assert.Empty(settingsStoreResult.LogPaths);
         Assert.True(File.Exists(Path.Combine(tempFolder, "settings.json")));
     }
 
@@ -27,10 +27,10 @@ public class SettingsStoreTests
         string logPath = Path.Combine(Path.GetTempPath(), "logs.txt");
 
         //Act
-        SettingsStoreResult settingsStoreResult = settingsStore.UpdateLogPath(logPath);
+        SettingsStoreResult settingsStoreResult = settingsStore.AddLogPath(logPath);
 
         //Assert
-        Assert.True(!string.IsNullOrWhiteSpace(settingsStoreResult.LogPath));
-        Assert.Equal(logPath, settingsStoreResult.LogPath);
+        Assert.True(settingsStoreResult.LogPaths.Any());
+        Assert.Equal(logPath, settingsStoreResult.LogPaths.FirstOrDefault(x => x == logPath));
     }
 }
