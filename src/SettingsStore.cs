@@ -20,13 +20,13 @@ public class SettingsStore
     /// <returns></returns>
     public SettingsStoreResult CreateOrLoadSettings()
     {
-        var settingsStoreResult = new SettingsStoreResult();
+        SettingsStoreResult settingsStoreResult = new();
 
         try
         {
             string settingsFullPath = Path.Combine(_folderPath, "settings.json");
 
-            var settings = new AppSettings();
+            AppSettings? settings = new();
 
             string contents;
             if (!File.Exists(settingsFullPath))
@@ -59,5 +59,16 @@ public class SettingsStore
         }
 
         return settingsStoreResult;
+    }
+
+    public SettingsStoreResult UpdateLogPath(string logPath)
+    {
+        SettingsStoreResult settings = CreateOrLoadSettings();
+        settings.LogPath = logPath;
+
+        string content = JsonSerializer.Serialize(settings);
+        File.WriteAllText(logPath, content);
+
+        return settings;
     }
 }
