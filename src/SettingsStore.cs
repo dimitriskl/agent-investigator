@@ -8,6 +8,7 @@ namespace agent_investigator;
 public class SettingsStore
 {
     private readonly string _folderPath;
+    private readonly string _settingsJson = "settings.json";
 
     public SettingsStore(string folderPath)
     {
@@ -24,7 +25,7 @@ public class SettingsStore
 
         try
         {
-            string settingsFullPath = Path.Combine(_folderPath, "settings.json");
+            string settingsFullPath = Path.Combine(_folderPath, _settingsJson);
 
             AppSettings? settings = new();
 
@@ -43,11 +44,7 @@ public class SettingsStore
             }
 
             settingsStoreResult.IsSuccess = true;
-            if (settings != null)
-            {
-                settingsStoreResult.LogPaths = settings.LogPaths;
-                settingsStoreResult.AppSettings = settings;
-            }
+            if (settings != null) settingsStoreResult.LogPaths = settings.LogPaths;
         }
         catch (DirectoryNotFoundException e)
         {
@@ -69,8 +66,9 @@ public class SettingsStore
         SettingsStoreResult settings = CreateOrLoadSettings();
         settings.LogPaths.Add(logPath);
 
-        string content = JsonSerializer.Serialize(settings);
-        File.WriteAllText(logPath, content);
+        string content = JsonSerializer.Serialize(new AppSettings { LogPaths = settings.LogPaths });
+
+        File.WriteAllText(Path.Combine(_folderPath, _settingsJson), content);
 
         return settings;
     }
