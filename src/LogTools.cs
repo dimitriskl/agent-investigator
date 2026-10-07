@@ -6,10 +6,9 @@ namespace agent_investigator;
 ///     Log tools class
 /// </summary>
 /// <param name="logFolders"></param>
-public class LogTools(List<string> logFolders)
+/// <param name="logExtensions">File extensions that count as log files, e.g. ".log"</param>
+public class LogTools(List<string> logFolders, List<string> logExtensions)
 {
-    private static readonly string[] LogExtensions = [".log", ".md", ".txt"];
-
     /// <summary>
     ///     List of folder's file tool
     /// </summary>
@@ -54,9 +53,9 @@ public class LogTools(List<string> logFolders)
         };
     }
 
-    private static IEnumerable<string> LogFilesIn(string logFolder) =>
+    private IEnumerable<string> LogFilesIn(string logFolder) =>
         Directory.EnumerateFiles(logFolder, "*.*", SearchOption.AllDirectories)
-            .Where(x => LogExtensions.Contains(Path.GetExtension(x), StringComparer.OrdinalIgnoreCase));
+            .Where(x => logExtensions.Contains(Path.GetExtension(x), StringComparer.OrdinalIgnoreCase));
 
     /// <summary>
     ///     Search the  logs for data

@@ -80,7 +80,7 @@ internal class Program
         string? requestedModel = args.Length > 1 ? args[1].Trim() : null;
 
         //Create tools
-        AgentTools agentTools = new(result.LogPaths);
+        AgentTools agentTools = new(result.LogPaths, result.LogExtensions);
 
         //Create the agent
         AIAgent agent = AiAgent(provider, requestedModel, modelInstructions, agentTools.Tools);

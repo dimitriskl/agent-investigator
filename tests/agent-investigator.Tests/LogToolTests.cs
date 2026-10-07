@@ -30,7 +30,7 @@ public class LogToolTests : IDisposable
     public void ListLogFiles_FolderWithLogsAndOtherFiles_ReturnsLogsOnly()
     {
         //Arrange
-        LogTools logTools = new(new List<string> { logFolder });
+        LogTools logTools = new(new List<string> { logFolder }, AppSettings.DefaultLogExtensions);
 
         //Act
         LogToolsResult result = logTools.ListLogFiles();
@@ -48,7 +48,7 @@ public class LogToolTests : IDisposable
     {
         //Arrange
         string notExistingLogFolder = Path.Combine("./", Guid.NewGuid().ToString());
-        LogTools logTools = new(new List<string> { notExistingLogFolder });
+        LogTools logTools = new(new List<string> { notExistingLogFolder }, AppSettings.DefaultLogExtensions);
 
         //Act
         LogToolsResult result = logTools.ListLogFiles();
@@ -62,7 +62,7 @@ public class LogToolTests : IDisposable
     {
         //Arrange
         string folderDosentExist = Path.Combine(Directory.GetCurrentDirectory(), Guid.NewGuid().ToString());
-        LogTools logTools = new(new List<string> { folderDosentExist });
+        LogTools logTools = new(new List<string> { folderDosentExist }, AppSettings.DefaultLogExtensions);
 
         //Act
         LogToolsResult result = logTools.ListLogFiles();
@@ -82,7 +82,7 @@ public class LogToolTests : IDisposable
         Directory.CreateDirectory(secondFolder);
         File.WriteAllText(Path.Combine(firstFolder, "app.log"), "first app log");
         File.WriteAllText(Path.Combine(secondFolder, "app.log"), "second app log");
-        LogTools logTools = new(new List<string> { firstFolder, secondFolder });
+        LogTools logTools = new(new List<string> { firstFolder, secondFolder }, AppSettings.DefaultLogExtensions);
 
         //Act
         LogToolsResult result = logTools.ListLogFiles();
@@ -107,12 +107,26 @@ public class LogToolTests : IDisposable
     {
         //Arrange
         File.WriteAllText(Path.Combine(logFolder, "app.log"), "INFO started\nERROR Timeout for order 1002");
-        LogTools logTools = new(new List<string> { logFolder });
+        LogTools logTools = new(new List<string> { logFolder }, AppSettings.DefaultLogExtensions);
 
         //Act
         string[] lines = logTools.SearchLogs("timeout");
 
         //Assert
         Assert.Equal(new[] { $"{Path.Combine(logFolder, "app.log")}:2: ERROR Timeout for order 1002" }, lines);
+    }
+
+    [Fact]
+    public void ListLogFiles_CustomExtensions_ListsOnlyThoseExtensions()
+    {
+        //Arrange
+        File.WriteAllText(Path.Combine(logFolder, "run.JSONL"), "{}");
+        LogTools logTools = new(new List<string> { logFolder }, new List<string> { ".jsonl" });
+
+        //Act
+        LogToolsResult result = logTools.ListLogFiles();
+
+        //Assert
+        Assert.Equal(new[] { "run.JSONL" }, Assert.Single(result.Folders).Files);
     }
 }

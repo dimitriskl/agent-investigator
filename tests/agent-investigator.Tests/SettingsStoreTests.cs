@@ -48,4 +48,66 @@ public class SettingsStoreTests
         //Assert
         Assert.Contains(logPath, reloaded.LogPaths);
     }
+
+    [Fact]
+    public void CreateOrLoadSettings_FileDoesNotExist_UsesDefaultLogExtensions()
+    {
+        //Arrange
+        string tempFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        SettingsStore settingsStore = new(tempFolder);
+
+        //Act
+        SettingsStoreResult result = settingsStore.CreateOrLoadSettings();
+
+        //Assert
+        Assert.Equal(new[] { ".log", ".md", ".txt" }, result.LogExtensions);
+    }
+
+    [Fact]
+    public void CreateOrLoadSettings_FileWithoutLogExtensions_UsesDefaultLogExtensions()
+    {
+        //Arrange: a settings.json written before extensions existed
+        string tempFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        Directory.CreateDirectory(tempFolder);
+        File.WriteAllText(Path.Combine(tempFolder, "settings.json"), """{"LogPaths":["C:\\logs"]}""");
+
+        //Act
+        SettingsStoreResult result = new SettingsStore(tempFolder).CreateOrLoadSettings();
+
+        //Assert
+        Assert.Equal(new[] { ".log", ".md", ".txt" }, result.LogExtensions);
+    }
+
+    [Fact]
+    public void CreateOrLoadSettings_FileWithCustomLogExtensions_UsesThem()
+    {
+        //Arrange
+        string tempFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        Directory.CreateDirectory(tempFolder);
+        File.WriteAllText(Path.Combine(tempFolder, "settings.json"),
+            """{"LogPaths":[],"LogExtensions":[".log",".jsonl"]}""");
+
+        //Act
+        SettingsStoreResult result = new SettingsStore(tempFolder).CreateOrLoadSettings();
+
+        //Assert
+        Assert.Equal(new[] { ".log", ".jsonl" }, result.LogExtensions);
+    }
+
+    [Fact]
+    public void AddLogPath_FileWithCustomLogExtensions_KeepsThem()
+    {
+        //Arrange
+        string tempFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        Directory.CreateDirectory(tempFolder);
+        File.WriteAllText(Path.Combine(tempFolder, "settings.json"),
+            """{"LogPaths":[],"LogExtensions":[".jsonl"]}""");
+        new SettingsStore(tempFolder).AddLogPath(Path.Combine(tempFolder, "logs"));
+
+        //Act
+        SettingsStoreResult reloaded = new SettingsStore(tempFolder).CreateOrLoadSettings();
+
+        //Assert
+        Assert.Equal(new[] { ".jsonl" }, reloaded.LogExtensions);
+    }
 }

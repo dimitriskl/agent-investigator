@@ -44,7 +44,11 @@ public class SettingsStore
             }
 
             settingsStoreResult.IsSuccess = true;
-            if (settings != null) settingsStoreResult.LogPaths = settings.LogPaths;
+            if (settings != null)
+            {
+                settingsStoreResult.LogPaths = settings.LogPaths;
+                settingsStoreResult.LogExtensions = settings.LogExtensions;
+            }
         }
         catch (DirectoryNotFoundException e)
         {
@@ -66,7 +70,11 @@ public class SettingsStore
         SettingsStoreResult settings = CreateOrLoadSettings();
         settings.LogPaths.Add(logPath);
 
-        string content = JsonSerializer.Serialize(new AppSettings { LogPaths = settings.LogPaths });
+        string content = JsonSerializer.Serialize(new AppSettings
+        {
+            LogPaths = settings.LogPaths,
+            LogExtensions = settings.LogExtensions
+        });
 
         File.WriteAllText(Path.Combine(_folderPath, _settingsJson), content);
 

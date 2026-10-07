@@ -4,9 +4,9 @@ namespace agent_investigator;
 
 public class AgentTools
 {
-    public AgentTools(List<string> logFolders)
+    public AgentTools(List<string> logFolders, List<string> logExtensions)
     {
-        LogTools logtools = new(logFolders);
+        LogTools logtools = new(logFolders, logExtensions);
 
         Tools =
         [
