@@ -83,7 +83,10 @@ internal class Program
         AgentTools agentTools = new(result.LogPaths, result.LogExtensions);
 
         //Create the agent
-        AIAgent agent = AiAgent(provider, requestedModel, modelInstructions, agentTools.Tools);
+        AIAgent agent = AiAgent(provider, requestedModel, modelInstructions, agentTools.Tools)
+            .AsBuilder()
+            .Use(AuditMiddleware.LogToolCall)
+            .Build();
 
         //Create a session for the agent
         AgentSession session = await agent.CreateSessionAsync();

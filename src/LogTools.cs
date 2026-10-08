@@ -15,8 +15,6 @@ public class LogTools(List<string> logFolders, List<string> logExtensions)
     /// <returns></returns>
     public LogToolsResult ListLogFiles()
     {
-        Console.WriteLine("(ListLogFiles was called)");
-
         List<LogFolderFiles> folders = [];
         List<string> errors = [];
 
@@ -53,9 +51,11 @@ public class LogTools(List<string> logFolders, List<string> logExtensions)
         };
     }
 
-    private IEnumerable<string> LogFilesIn(string logFolder) =>
-        Directory.EnumerateFiles(logFolder, "*.*", SearchOption.AllDirectories)
+    private IEnumerable<string> LogFilesIn(string logFolder)
+    {
+        return Directory.EnumerateFiles(logFolder, "*.*", SearchOption.AllDirectories)
             .Where(x => logExtensions.Contains(Path.GetExtension(x), StringComparer.OrdinalIgnoreCase));
+    }
 
     /// <summary>
     ///     Search the  logs for data
@@ -67,8 +67,6 @@ public class LogTools(List<string> logFolders, List<string> logExtensions)
         string text
     )
     {
-        Console.WriteLine($"(SearchLogs was called with '{text}')");
-
         List<string> results = [];
         foreach (string logFolder in logFolders.Where(Directory.Exists))
         {
